@@ -41,3 +41,170 @@ public:
         }
     }
 };
+
+//双端队列 链表实现
+struct Node {
+    Node *next;
+    Node *pre;
+    int val;
+    Node(int x):val(x), next(NULL), pre(NULL) {}
+};
+class MyCircularDeque {
+    private:
+    Node *head,*tail;
+    int captity;
+    int count;
+public:
+    void prinfall()
+    {
+        Node * p= head;
+        while(p!=NULL)
+        {
+            printf("%d ",p->val);
+            p=p->next;
+        }
+        printf("\n");
+    }
+    /** Initialize your data structure here. Set the size of the deque to be k. */
+    MyCircularDeque(int k) {
+    captity = k;
+    head  =new  Node(0);
+    tail  = new Node(0);
+    head->next = tail;
+    tail->pre = head;
+    count = 0;
+    }
+
+    /** Adds an item at the front of Deque. Return true if the operation is successful. */
+    bool insertFront(int value) {
+         if(count >=captity)
+        {
+            return false;
+        }
+        Node* headNt = head->next;
+        Node *temp = new Node(value);
+        head->next = temp;
+        temp->next = headNt;
+        temp->pre=head;
+        headNt->pre = temp;
+        count++;
+        //prinfall();
+        return true;
+    }
+
+    /** Adds an item at the rear of Deque. Return true if the operation is successful. */
+    bool insertLast(int value) {
+        if(count >=captity)
+        {
+            return false;
+        }
+        Node* lastPre = tail->pre;
+        Node* temp = new Node(value);
+        lastPre ->next = temp;
+        temp->pre = lastPre;
+        temp ->next = tail;
+        tail->pre = temp;
+        count++;
+        //prinfall();
+        return true;
+    }
+
+    /** Deletes an item from the front of Deque. Return true if the operation is successful. */
+    bool deleteFront() {
+        if(head->next == tail)
+        {
+            return false;
+        }
+        Node* headNt = head->next->next;
+        delete head->next;
+        head->next = headNt;
+        headNt->pre = head;
+        count--;
+        //prinfall();
+        return true;
+    }
+
+    /** Deletes an item from the rear of Deque. Return true if the operation is successful. */
+    bool deleteLast() {
+        if(head->next == tail)
+        {
+            return false;
+        }
+        Node* lastPre = tail->pre->pre;//0->0->0
+        delete lastPre->next;
+        lastPre->next  = tail;
+        tail->pre = lastPre;
+        count--;
+        //prinfall();
+        return true;
+    }
+
+    /** Get the front item from the deque. */
+    int getFront() {
+        if(head->next == tail)
+        {
+            return -1;
+        }
+        return head->next->val;
+    }
+
+    /** Get the last item from the deque. */
+    int getRear() {
+        if(head->next == tail)
+        {
+            return -1;
+        }
+        return tail->pre->val;
+    }
+
+    /** Checks whether the circular deque is empty or not. */
+    bool isEmpty() {
+        if(head->next == tail)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    /** Checks whether the circular deque is full or not. */
+    bool isFull() {
+        if(count >= captity)
+        {
+            return true;
+        }
+        return false;
+    }
+};
+
+//接水
+class Solution {
+public:
+    //
+    int trap(vector<int>& height) {
+        if(height.size()<3)
+        {
+            return 0;
+        }
+        int size = height.size();
+        //对于每一个考虑坐标来说 找左边最大的高度柱子与右边最大高度柱子
+        int a_left[size],a_right[size];
+        int ans=0,left_max=0,right_max =0;
+        for(int i=0;i<size;i++)
+        {
+            a_left[i]= height[left_max]>height[i]?left_max:i;
+            a_right[size-1-i] = height[right_max]>height[size-1-i] ? right_max:(size-1-i);
+            left_max = a_left[i];
+            right_max = a_right[size-1-i];
+        }
+        for(int i=0;i<size;i++)
+        {
+            if(height[i] > height[a_left[i]] ||height[i] > height[a_right[i]])
+            {
+                continue;
+            }
+            int min = height[a_left[i]] > height[a_right[i]]? a_right[i]: a_left[i];
+            ans += (height[min]-height[i])*(a_right[i]-a_left[i]-1);
+        }
+        return ans;
+    }
+};
