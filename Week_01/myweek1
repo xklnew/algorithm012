@@ -1,0 +1,43 @@
+//删除排序数组中的重复项
+class Solution {
+public:
+    int removeDuplicates(vector<int>& nums) {
+        if(nums.size() <= 1)
+        {
+            return nums.size();
+        }
+        int pos =0;
+        for(int i=1; i<nums.size(); i++)
+        {
+            if(nums[i] != nums[pos])
+            {
+                nums[pos+1] = nums[i];
+                pos++;
+            }
+        }
+        return pos + 1;
+    }
+};
+//旋转数组
+class Solution {
+public:
+    void rotate(vector<int>& nums, int k) {
+        int size = nums.size();
+        if(size <= 1)
+            return;
+        k =  k % size;
+        int count = 0;
+        for (int start = 0; count < size; start++) {
+            int current = start;
+            int prev = nums[start];
+            do {
+                int next = (current + k) % size;
+                int temp = nums[next];
+                nums[next] = prev;
+                prev = temp;
+                current = next;
+                count++;
+            } while (start != current);
+        }
+    }
+};
