@@ -131,3 +131,34 @@ public:
         return res;
     }
 };
+
+//填岛操作
+class Solution {
+public:
+    void dfs(int i,int j,vector<vector<char>>& grid)
+    {
+        grid[i][j] = '0';
+        int iMax = grid.size(),jMax=grid[i].size();
+        if(i-1 >=0 && grid[i-1][j] == '1') dfs(i-1,j,grid);
+        if(i+1 <iMax && grid[i+1][j] == '1') dfs(i+1,j,grid);
+        if(j-1 >=0 && grid[i][j-1] == '1') dfs(i,j-1,grid);
+        if(j+1 <jMax && grid[i][j+1] == '1') dfs(i,j+1,grid);
+    }
+public:
+    int numIslands(vector<vector<char>>& grid) {
+        //dfs深度优先
+        int count = 0;
+        for(int i=0;i<grid.size();i++)
+        {
+            for(int j=0;j<grid[i].size();j++)
+            {
+                if(grid[i][j]=='1')
+                {
+                    dfs(i,j,grid);
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
+};
