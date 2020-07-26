@@ -1,0 +1,121 @@
+//前序和中序 构建二叉树
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+
+    //前序 根左右            中序 左根右
+    TreeNode* buildBigTree(vector<int>& preorder,int preIndexBegin, int preIndexEnd,vector<int>& inorder,int inIndexBegin,int inIndexEnd) {
+        if(preIndexEnd < preIndexBegin || inIndexEnd < inIndexBegin)
+        {
+            return NULL;
+        }
+        TreeNode* root =new TreeNode(preorder[preIndexBegin]);//0
+        //printf("root val=%d \n",root->val);
+        if(preIndexBegin == preIndexEnd)
+        {
+
+            return root;
+        }
+        int nSplitIndex = -1;
+         for(int i=inIndexBegin;i<=inIndexEnd;i++)
+         {
+             if(inorder[i] == preorder[preIndexBegin])
+             {
+                 nSplitIndex = i;
+             }
+         }
+         //printf("split index=%d \n",nSplitIndex);
+         //(pre,1,0+1-0,ino,0,0)
+         TreeNode* left = buildBigTree(preorder,preIndexBegin+1,preIndexBegin+nSplitIndex-inIndexBegin,inorder,inIndexBegin,nSplitIndex-1);
+         //(pre,2,4,ino,2,4)
+         TreeNode* right = buildBigTree(preorder,preIndexBegin+nSplitIndex-inIndexBegin+1,preIndexEnd,inorder,nSplitIndex+1,inIndexEnd);
+         root->left = left;
+         root->right = right;
+         return root;
+    }
+    TreeNode* buildTree(vector<int>& preorder, vector<int>& inorder) {
+        if(preorder.size()<=0 || inorder.size()<=0)
+        {
+            return NULL;
+        }
+        return buildBigTree(preorder,0,preorder.size()-1,inorder,0,inorder.size()-1);
+    }
+};
+
+//n个数里面选K个的所有组合
+class Solution {
+public:
+    void combineKNums(vector<vector<int>>& res,int index,int k,int n,vector<int> &curList)
+    {
+        if(curList.size() == k)
+        {
+            res.push_back(curList);
+            return;
+        }
+        if(index >=n)
+        {
+            return;
+        }
+        for(int i= index;i<n;i++)
+        {
+            curList.push_back(i+1);
+            combineKNums(res,i+1,k,n,curList);
+            curList.pop_back();
+        }
+    }
+    vector<vector<int>> combine(int n, int k) {
+        vector<vector<int>> res;
+        if(k<=0)
+        {
+            return res;
+        }
+        vector<int> curList;
+        combineKNums(res,0,k,n,curList);
+        return res;
+    }
+};
+
+//全排列问题
+class Solution {
+public:
+     vector<vector<int>> res;
+     vector<int> curList;
+     map<int,bool> used;
+     void perBigMute(vector<int>& nums)
+     {
+         if(curList.size() == nums.size())
+         {
+             res.push_back(curList);
+             return;
+         }
+         for(int i=0;i<nums.size();i++)
+         {
+             if(used[nums[i]])
+             {
+                 continue;
+             }
+             curList.push_back(nums[i]);
+             used[nums[i]] = true;
+             perBigMute(nums);
+             used[nums[i]] = false;
+             curList.pop_back();
+         }
+     }
+    vector<vector<int>> permute(vector<int>& nums) {
+        if(nums.size()<=0)
+        {
+            return res;
+        }
+        perBigMute(nums);
+       return res;
+    }
+};
