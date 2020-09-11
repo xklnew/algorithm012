@@ -1,0 +1,47 @@
+//字符串中第一个唯一字符
+class Solution {
+public:
+    int firstUniqChar(string s) {
+        //map
+        //map<char,int> records;
+        int hash[26]={0};
+        for(int i=0;i<s.size();i++)
+        {
+            hash[s[i]-'a']++;
+        }
+        for(int i=0;i<s.size();i++)
+        {
+           if(hash[s[i]-'a'] == 1)
+           {
+               return i;
+           }
+        }
+        return -1;
+    }
+};
+//反转字符串2
+class Solution {
+public:
+    string reverseStr(string s, int k) {
+        if(s.size()<=0||k<=1)
+        {
+            return s;
+        }
+        int size = s.size();
+        for(int i=0;i<size;i+=2*k)
+        {
+            //反转2K得前K个
+            //printf("the i=%d\n",i);
+            int lst = i+k>size?size:i+k;
+            //printf("the deadline=%d\n",lst);
+            int span = (lst-i)/2;
+            for(int j=0;j<span;j++)
+            {
+                char  temp = s[j+i];
+                s[j+i] = s[lst-j-1];
+                s[lst-j-1] = temp;
+            }
+        }
+        return s;
+    }
+};
