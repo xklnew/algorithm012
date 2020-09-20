@@ -1,7 +1,7 @@
 总结
 数据结构
 一维
-基础：数组Array、链表Linked list\n
+基础：数组Array、链表Linked list
 高级：栈stack、队列queue、双端队列deque、集合set、映射map。
 set和map都又分为hash set O(1) 和 tree set（背后是二叉搜索树） O(log n)。
 栈：直方图、水槽盛水问题。
